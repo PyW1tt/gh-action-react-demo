@@ -17,6 +17,7 @@ jobs:
   build:
     environment: prod
     runs-on: ubuntu-latest
+    needs: lint
     steps:
       - name: Print env variable
         run: echo "Bun version:${{ vars.BUN_VERSION }}"
