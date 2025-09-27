@@ -15,10 +15,10 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: api key
-        uses: echo "55555:${{secrets.API_KEY}}
+        run: echo "55555:${{secrets.API_KEY}}
 
       - name: vars
-        uses: echo "fghfhfgh:${{vars.BUN_VERSION}}"
+        run: echo "fghfhfgh:${{vars.BUN_VERSION}}"
 
       - name: Clone repo
         uses: actions/checkout@v5
