@@ -15,7 +15,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: api key
-        uses: echo ${{secret.API_KEY}}
+        uses: echo ${{secrets.API_KEY}}
 
       - name: vars
         uses: echo ${{vars.BUN_VERSION}}
