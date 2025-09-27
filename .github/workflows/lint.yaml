@@ -2,7 +2,7 @@ name: ESLint
 on: 
   push:
     branches:
-      - home
+      - main
       - features/**
       - "!features/authen"
   workflow_dispatch:
@@ -12,8 +12,14 @@ on:
     
 jobs:
   lint:
+    environment: testing
     runs-on: ubuntu-latest
     steps:
+      - name: Print env variable
+        run: echo "Bun version:${{ vars.BUN_VERSION }}"
+      - name: Print env secret
+        run: echo "API Key:${{ secrets.API_KEY }}"
+        
       - name: Clone repo
         uses: actions/checkout@v5
       - name: Setup Bun
@@ -22,5 +28,13 @@ jobs:
           bun-version: 1.2.18
       - name: Install Dependencies
         run: bun i
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+
       - name: Run ESLint
         run: bun run lint
