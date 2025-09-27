@@ -10,7 +10,7 @@ on:
     types:
       - opened
 # env:
-#   BUN_VERSION: '1.2.18'
+#   BUN_VERSION: '1.2.22'
 #   BUILD_ENV: 'production'
 
 jobs:
