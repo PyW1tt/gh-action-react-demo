@@ -23,6 +23,9 @@ jobs:
         NODE_ENV: production
 
     steps:
+      - name: Clone repo
+        uses: actions/checkout@v5
+
       # - name: Print env variable
       #   run: echo "Bun version:${{ vars.BUN_VERSION }}"
       # - name: Print env secret
@@ -31,7 +34,7 @@ jobs:
       #   run: bun i
 
       - name: Install and actions/cache
-        uses: .github/action/install-cache/action.yaml      
+        uses: ./.github/action/install-cache/action.yaml      
 
       - name: Build Project
         run: bun run build
