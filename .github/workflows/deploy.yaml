@@ -78,4 +78,4 @@ jobs:
           DISCORD_WEBHOOK: https://discord.com/api/webhooks/1421591330534195294/mPE6czOkHtNuMeKn_U8_HToha1UhtGxilcTXEhTKt4yUo8EjGLPcMQI553WgkK-kf8Ez
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Build ${{github.sha}} fuiled ..'
+          args: 'Build ${{github.sha}} '
