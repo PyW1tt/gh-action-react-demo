@@ -70,7 +70,7 @@ jobs:
     needs: 
       - build
       - deploy
-    if: always()
+    if: failure()
     runs-on: ubuntu-latest
     steps:
       - name: Discord notification
@@ -78,4 +78,18 @@ jobs:
           DISCORD_WEBHOOK: https://discord.com/api/webhooks/1421591330534195294/mPE6czOkHtNuMeKn_U8_HToha1UhtGxilcTXEhTKt4yUo8EjGLPcMQI553WgkK-kf8Ez
         uses: Ilshidur/action-discord@master
         with:
-          args: 'Build ${{github.sha}} '
+          args: 'Build ${{github.sha}} failure'
+
+  notify-sucess:
+    needs: 
+      - build
+      - deploy
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: https://discord.com/api/webhooks/1421591330534195294/mPE6czOkHtNuMeKn_U8_HToha1UhtGxilcTXEhTKt4yUo8EjGLPcMQI553WgkK-kf8Ez
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Build ${{github.sha}} success'
