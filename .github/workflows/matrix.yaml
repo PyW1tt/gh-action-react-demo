@@ -1,0 +1,26 @@
+name: Matrix
+on:
+  push:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        # ทดสอบหลาย OS และ Node version
+        bun-version: [1.2.0, 1.2.18, 1.2.16]
+        # ทดสอบหลาย browser (สำหรับ e2e testing)
+        browser: [chrome, firefox, safari]
+        exclude:
+          # Safari ใช้ได้แค่บน macOS
+          - bun-version: 1.2.18
+            browser: safari      
+        include:
+          # เพิ่ม configuration พิเศษ
+          - bun-version: 1.2.18
+            browser: adge
+          - bun-version: 1.1.0
+            browser: chrome
+           
+    steps:
+      - name: Print Bun version | browser
+        uses: echo  "${{matrix.bun-version}} - ${{matrix.browser}}"
