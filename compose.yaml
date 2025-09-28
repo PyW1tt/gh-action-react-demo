@@ -1,0 +1,14 @@
+services:
+  web:
+    image: pyw1tt/react-demo:latest
+    container_name: react
+    ports:
+      - "3000:3000"
+    labels:
+      - "com.centurylinklabs.watchtower.enable=true"
+    networks:
+      - caddy    # อ้างอิงชื่อ network
+
+networks:
+  caddy:
+    external: true  # ตัวจริงอยู่นอก compose นี้

@@ -1,0 +1,100 @@
+name: Deploy React
+on: 
+  push:
+    branches:
+      - main
+      - features/**
+      - "!features/authen"
+  workflow_dispatch:
+  pull_request:
+    types:
+      - opened
+# env:
+#   BUN_VERSION: '1.2.22'
+#   BUILD_ENV: 'production'
+
+jobs:
+  build:
+    environment: prod
+    runs-on: ubuntu-latest
+    container: 
+      image: oven/bun:1
+      env: 
+        NODE_ENV: production
+
+    steps:
+      - name: Print env variable
+        run: echo "Bun version:${{ vars.BUN_VERSION }}"
+      - name: Print env secret
+        run: echo "API Key:${{ secrets.API_KEY }}"
+
+      - name: Clone repo
+        uses: actions/checkout@v5
+      # - name: Setup Bun
+      #   uses: oven-sh/setup-bun@v2
+      #   with:
+      #     bun-version: ${{vars.BUN_VERSION}}
+
+      - name: Cache dependencies
+        uses: actions/cache@v4
+        with:
+          path: |
+            ~/.bun/install/cache
+          key: ${{ runner.os }}-bun-${{ hashFiles('**/bun.lock') }}
+
+      - name: Install Dependencies
+        run: bun i
+      - name: Build Project
+        run: bun run build
+      - name: List files
+        run: ls -l dist
+      - name: Upload dist folder
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-folder
+          path: dist/
+
+  deploy:
+    # if: github.ref == 'refs/heads/main'
+    if: success()
+    runs-on: ubuntu-latest
+    needs:
+      - build
+    steps:
+      - name: Download dist folder
+        uses: actions/download-artifact@v4
+        with:
+          name: dist-folder
+      - name: List all files
+        run: ls -R
+      - name: Deploy
+        run: echo "Deploying..."
+
+  # Runs only if tests fail
+  notify-failure:
+    needs: 
+      - build
+      - deploy
+    if: failure()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: https://discord.com/api/webhooks/1421591330534195294/mPE6czOkHtNuMeKn_U8_HToha1UhtGxilcTXEhTKt4yUo8EjGLPcMQI553WgkK-kf8Ez
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Build ${{github.sha}} failure'
+
+  notify-sucess:
+    needs: 
+      - build
+      - deploy
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Discord notification
+        env:
+          DISCORD_WEBHOOK: https://discord.com/api/webhooks/1421591330534195294/mPE6czOkHtNuMeKn_U8_HToha1UhtGxilcTXEhTKt4yUo8EjGLPcMQI553WgkK-kf8Ez
+        uses: Ilshidur/action-discord@master
+        with:
+          args: 'Build ${{github.sha}} success'
