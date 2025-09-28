@@ -20,7 +20,6 @@ jobs:
             browser: adge
           - bun-version: 1.1.0
             browser: chrome
-           
     steps:
       - name: Print Bun version | browser
-        uses: echo  "${{matrix.bun-version}} - ${{matrix.browser}}"
+        run: echo  "${{matrix.bun-version}} - ${{matrix.browser}}"
